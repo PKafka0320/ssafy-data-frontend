@@ -3,12 +3,15 @@ const messageForm = document.getElementById("message-form");
 const userInput = document.getElementById("user-input");
 const apiSelector = document.getElementById("api-selector");
 
-// Create a message bubble
+// We'll read the API endpoint from an environment variable
+const BASE_URL = process.env.API_ENDPOINT;
+// This will be replaced at build time by Parcel with the appropriate value
+// from the corresponding .env file.
+
 function createMessageBubble(content, sender = "user") {
   const wrapper = document.createElement("div");
   wrapper.classList.add("mb-6", "flex", "items-start", "space-x-3");
 
-  // Avatar
   const avatar = document.createElement("div");
   avatar.classList.add(
     "w-10",
@@ -30,7 +33,6 @@ function createMessageBubble(content, sender = "user") {
     avatar.textContent = "U";
   }
 
-  // Bubble
   const bubble = document.createElement("div");
   bubble.classList.add(
     "max-w-full",
@@ -55,16 +57,13 @@ function createMessageBubble(content, sender = "user") {
   return wrapper;
 }
 
-// Scroll to bottom
 function scrollToBottom() {
   chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
-// Fetch assistant response from the selected backend endpoint
 async function getAssistantResponse(userMessage) {
   const mode = apiSelector.value;
-  const url =
-    mode === "assistant" ? "http://localhost:8000/assistant" : "http://localhost:8000/chat";
+  const url = mode === "assistant" ? `${BASE_URL}/assistant` : `${BASE_URL}/chat`;
 
   const response = await fetch(url, {
     method: "POST",
@@ -82,18 +81,15 @@ async function getAssistantResponse(userMessage) {
   return data.reply;
 }
 
-// Handle form submission
 messageForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const message = userInput.value.trim();
   if (!message) return;
 
-  // User message
   chatContainer.appendChild(createMessageBubble(message, "user"));
   userInput.value = "";
   scrollToBottom();
 
-  // Assistant response
   try {
     const response = await getAssistantResponse(message);
     chatContainer.appendChild(createMessageBubble(response, "assistant"));
