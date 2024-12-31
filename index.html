@@ -18,10 +18,10 @@
 
     <!-- Main chat area -->
     <main id="chat-container" class="flex-1 overflow-y-auto p-4 chat-scroll">
-      <!-- Messages will go here -->
+      <!-- Messages will be dynamically inserted here -->
     </main>
 
-    <!-- Input area -->
+    <!-- Input area with endpoint selector -->
     <footer class="border-t border-gray-300 bg-white p-4">
       <form id="message-form" class="flex items-center space-x-2">
         <input
@@ -31,6 +31,10 @@
           placeholder="Type your message..."
           required
         />
+        <select id="api-selector" class="border border-gray-300 rounded-md p-2">
+          <option value="naive" selected>Naive (/chat)</option>
+          <option value="assistant">Assistant (/assistant)</option>
+        </select>
         <button
           type="submit"
           class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
